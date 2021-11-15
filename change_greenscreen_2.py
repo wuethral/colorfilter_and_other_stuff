@@ -57,6 +57,7 @@ for i in range(1):
     video = cv2.VideoCapture('background_videos/pink.mp4')
     for i in range(10):
         ret, background = video.read()
+
         list_of_backgrounds.append(background)
 
 
@@ -131,7 +132,7 @@ for i in range(1):
             #cv2.imshow('Res',res)
             #cv2.imshow('Frame', background)
             #cv2.imshow('Green Screen', green_screen)
-        green_screen_img_path = 'Testing_Data_With_Augmentation/images_pink_backgrounds/' + image_name[:-4] + '_random_dataset.png'
+        green_screen_img_path = 'Testing_Data_With_Augmentation/images_new_backgrounds/' + image_name[:-4] + '_random_dataset.png'
         cv2.imwrite(green_screen_img_path, green_screen)
             #green_screen_img_path_2 = 'masks_no_errosion_bl/' + image_name + '_bl_image_' + str(img_nr) + '.png'
             #cv2.imwrite(green_screen_img_path_2, res)
@@ -152,5 +153,4 @@ for i in range(1):
             '''
     video.release()
     cv2.destroyAllWindows()
-
 

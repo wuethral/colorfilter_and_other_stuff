@@ -1,28 +1,48 @@
 import cv2
 import os
 import numpy as np
+import glob
 
 ''' 
 # makeing video from images
-image_folder = 'D:/masks/hands/original_images_renamed'
-video_name = 'D:/masks/hands/hands.avi'
+image_folder = 'images'
+video_name = 'image_folder/video_images_hsv_filter.avi'
 
 
-images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
-frame = cv2.imread(os.path.join(image_folder, images[0]))
-height, width, layers = frame.shape
+images = [img for img in os.listdir(image_folder) if img.endswith(".jpg")]
 
-video = cv2.VideoWriter(video_name, 0, 1, (width,height))
+for i in range(len(images)):
+    frame = cv2.imread(os.path.join(image_folder, images[i]))
+    height, width, layers = frame.shape
 
-for image in images:
-    video.write(cv2.imread(os.path.join(image_folder, image)))
+    video = cv2.VideoWriter(video_name, 0, 1, (width,height))
+
+    for image in images:
+        video.write(cv2.imread(os.path.join(image_folder, image)))
 
 cv2.destroyAllWindows()
 video.release()
 '''
+''' 
+video_name = 'image_folder/video_images_hsv_filter.avi'
+img_array = []
 
-video=cv2.VideoCapture('D:/masks/hands/hands.avi')
+for filename in glob.glob('filter_frames/*.png'):
+    img = cv2.imread(filename)
+    height, width, layers = img.shape
+    size = (width, height)
+    img_array.append(img)
+
+out = cv2.VideoWriter('video_name', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+for i in range(len(img_array)):
+    out.write(img_array[i])
+out.release()
+
+''' 
+video=cv2.VideoCapture('angle(20).avi')
 image=cv2.imread('green_screen_stuff/nazghul.jpg')
+im = cv2.imread('screw_lr_image_20.png')
 
 def nothing():
     pass
@@ -36,10 +56,10 @@ cv2.createTrackbar('L-V', 'Trackbars', 0,255, nothing)
 cv2.createTrackbar('U-H', 'Trackbars', 179,179, nothing)
 cv2.createTrackbar('U-S', 'Trackbars', 255,255, nothing)
 cv2.createTrackbar('U-V', 'Trackbars', 255,255, nothing)
-
+i = 0
 while True:
 
-
+    i += 1
     ret, frame = video.read()
     frame = cv2.resize(frame, (640,480))
     image=cv2.resize(image,(640,480))
@@ -61,14 +81,18 @@ while True:
     #print(mask)
     #print(mask.shape)
     #print(frame.shape)
-    #res = cv2.bitwise_and(frame, frame, mask=mask)
-    #f=frame-res
+    res = cv2.bitwise_and(frame, frame, mask=mask)
+    f=frame-res
     #cv2.imshow('F', f)
     #print(f)
-    #green_screen=np.where(f==0, image, f)
+    green_screen=np.where(f==0, image, f)
     #cv2.imshow('Res',res)
     cv2.imshow('Frame', frame)
     cv2.imshow('Mask', mask)
+    frame_name = 'filter_frames/frame_name_' + str(i) + '.png'
+    cv2.imwrite(frame_name, frame)
+    mask_name = 'filter_masks/mask_name_' + str(i) + '.png'
+    cv2.imwrite(mask_name, mask)
     #cv2.imshow('Green Screen', green_screen)
     k=cv2.waitKey(1000)
     if k==ord('q'):
